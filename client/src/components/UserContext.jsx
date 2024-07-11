@@ -52,6 +52,7 @@ export const UserProvider = ({ children }) => {
   const login_user = (email, password) => {
     fetch(`${server_url}/login`, {
       method: 'POST',
+      mode: 'cors',
       body: JSON.stringify({
         email: email,
         password: password,
@@ -87,6 +88,7 @@ export const UserProvider = ({ children }) => {
   const update_user = (username, email, password) => {
     fetch(`${server_url}/update_user/${currentUser.id}`, {
       method: 'PUT',
+      mode: 'cors',
       body: JSON.stringify({
         username: username,
         email: email,
@@ -122,6 +124,7 @@ export const UserProvider = ({ children }) => {
   const logout = () => {
     fetch(`${server_url}/logout`, {
       method: 'DELETE',
+      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${auth_token}`,

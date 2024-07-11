@@ -18,7 +18,7 @@ const CreateBook = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://127.0.0.1:5000/books', { 
+      const response = await fetch('https://majestic-folio-lib-app.onrender.com/books', { 
         headers: {
           'Content-Type': 'application/json',
         },

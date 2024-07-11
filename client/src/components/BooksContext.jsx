@@ -6,7 +6,9 @@ export const BooksContext = createContext();
 export const BooksProvider = ({ children }) => {
   const [books, setBooks] = useState([]);
   const [userProfile, setUserProfile] = useState({ borrowedBooks: [] });
-  
+  const [auth_token, setAuth_token] = useState(() =>
+    localStorage.getItem("access_token") || null
+  );
 
   const server_url = "https://majestic-folio-lib-app.onrender.com"
 
@@ -37,6 +39,7 @@ export const BooksProvider = ({ children }) => {
   const add_book = (title, author, genre, isbn, available_copies, auth_token) => {
     fetch(`${server_url}/create_book`, {
         method: 'POST',
+        mode: 'cors',
         body: JSON.stringify({
             title,
             author,

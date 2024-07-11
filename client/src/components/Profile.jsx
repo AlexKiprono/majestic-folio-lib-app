@@ -24,6 +24,8 @@ const Profile = () => {
         available_copies: 0,
     });
 
+  const server_url = "https://majestic-folio-lib-app.onrender.com"
+
     // Update form fields with current user details when currentUser changes
     useEffect(() => {
         if (currentUser) {
@@ -52,7 +54,7 @@ const Profile = () => {
     const handleAddBook = (e) => {
         e.preventDefault();
 
-        fetch('http://127.0.0.1:5000/create_book', {
+        fetch(`${server_url}/create_book`, {
             method: 'POST',
             body: JSON.stringify(newBook),
             headers: {
@@ -103,7 +105,7 @@ const Profile = () => {
             return;
         }
     
-        fetch('http://127.0.0.1:5000/update_user', {
+        fetch(`${server_url}/update_user`, {
             method: 'PUT',
             body: JSON.stringify({ username, email, password }),
             headers: {

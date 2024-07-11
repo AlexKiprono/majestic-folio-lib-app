@@ -14,6 +14,7 @@ import LibrarianProfile from './components/LibrarianProfile';
 import UpdateLibrarian from './Pages/UpdateLibrarian';
 import StudentList from './Pages/StudentList';
 import CreateBook from './Pages/CreateBook';
+import EditBookForm from './Pages/EditBookForm'
 
 const App = () => {
   return (
@@ -33,6 +34,8 @@ const App = () => {
         <Route path='/updatelibrarian' element={<UpdateLibrarian/>} />
         <Route path='/studentlist' element={<StudentList/>} />
         <Route path='/createbook' element={<CreateBook/>} />
+        <Route path='/edit' element={<EditBookForm/>} />
+
       </Routes>
       </UserProvider>
       </BooksProvider>

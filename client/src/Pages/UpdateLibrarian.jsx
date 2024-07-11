@@ -7,7 +7,7 @@ const UpdateLibrarian = () => {
   });
 
   useEffect(() => {
-    fetch('/http://127.0.0.1:5000/users')
+    fetch('/https://majestic-folio-lib-app.onrender.com/users')
       .then(response => response.json())
       .then(data => setLibrarian(data))
       .catch(error => console.error('Error fetching librarian details:', error));
@@ -20,7 +20,7 @@ const UpdateLibrarian = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('/http://127.0.0.1:5000/users', {
+    fetch('/https://majestic-folio-lib-app.onrender.com/users', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

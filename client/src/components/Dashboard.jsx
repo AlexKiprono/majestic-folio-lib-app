@@ -7,7 +7,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     // Fetch data from backend
-    fetch('http://127.0.0.1:5000/bookborrows')
+    fetch('https://majestic-folio-lib-app.onrender.com/bookborrows')
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
@@ -20,7 +20,7 @@ const Dashboard = () => {
 
   const handleReturnBook = (bookId) => {
     // Update book return status in backend
-    fetch(`http://127.0.0.1:5000/bookborrows`, {
+    fetch(`https://majestic-folio-lib-app.onrender.com/bookborrows`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -5,7 +5,7 @@ const LibrarianProfile = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/users')
+    fetch('https://majestic-folio-lib-app.onrender.com/users')
       .then(response => response.json())
       .then(data => setUser(data))
       .catch(error => console.error('Error fetching user details:', error));
