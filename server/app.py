@@ -353,34 +353,8 @@ def borrowed_books():
             'author': book.author
         })
     return jsonify(borrowed_books_list)
-    
 
-@app.route('/book/borrow', methods=['POST'])
-@jwt_required()
-def borrow_book():
-    current_user_id = get_jwt_identity()
-    current_user = User.query.get(current_user_id)
-
-    book_id = request.json.get('book_id')
-    book = Book.query.get_or_404(book_id)
-
-    if book.available_copies < 1:
-        return jsonify({"error": "No copies available"}), 400
-
-    new_borrow = BookBorrow(user_id=current_user.id, book_id=book.id)
-    book.available_copies -= 1
-
-    try:
-        db.session.add(new_borrow)
-        db.session.commit()
-        return jsonify({"success": "Book borrowed successfully", "borrow": new_borrow.to_dict()}), 201
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
-    
-
-
-
+                              
 @app.route('/book/return', methods=['POST'])
 @jwt_required()
 def return_book():
@@ -402,6 +376,23 @@ def return_book():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+
+    
+#all borrows
+@app.route('/bookborrows', methods=['GET'])
+def get_all_borrows():
+    borrows = BookBorrow.query.all()
+    borrows_list = []
+    for borrow in borrows:
+        borrows_list.append({
+            'id': borrow.id,
+            'user_id': borrow.user_id,
+            'book_id': borrow.book_id,
+            'borrow_date': borrow.borrow_date,
+           'return_date': borrow.return_date
+        })
+    return jsonify(borrows_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
