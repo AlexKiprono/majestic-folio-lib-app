@@ -171,6 +171,22 @@ def delete_user(id):
 
     return jsonify({"message": "User deleted successfully"}), 200
 
+# count users
+@app.route('/users/count', methods=['GET'])
+def count_users():
+    user_count = User.query.count()
+    return jsonify({"count": user_count}), 200
+
+# book routes
+
+#count books
+@app.route('/books/count', methods=['GET'])
+def count_books():
+    book_count = Book.query.count()
+    return jsonify({"count": book_count}), 200
+
+# get all books
+
 @app.route('/books/search', methods=['GET'])
 def search_books():
     query = request.args.get('query', '')
@@ -230,6 +246,56 @@ def get_books():
         "available_copies": book.available_copies
     } for book in books]
     return jsonify(book_list), 200
+
+#books borrowed by current user
+@app.route('/books/borrowed', methods=['GET'])
+@jwt_required()
+def get_borrowed_books():
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+
+    borrowed_books = current_user.borrowed_books
+    serialized_books = [book.to_dict() for book in borrowed_books]
+    return jsonify(serialized_books), 200
+
+#books borrowed by a specific user
+@app.route('/users/<int:user_id>/borrowed_books', methods=['GET'])
+def get_borrowed_books_by_user(user_id):
+    user = User.query.get_or_404(user_id)
+    borrowed_books = user.borrowed_books
+    serialized_books = [book.to_dict() for book in borrowed_books]
+    return jsonify(serialized_books), 200
+
+# borrow a book
+
+@app.route('/books/<int:book_id>/borrow', methods=['POST'])
+@jwt_required()
+def borrow_book(book_id):
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+    
+    book = Book.query.get_or_404(book_id)
+    if book.available_copies == 0:
+        return jsonify({"error": "This book is not available"}), 403
+    
+    # Check if the user already borrowed this book
+    if book in current_user.borrowed_books:
+        return jsonify({"error": "You have already borrowed this book"}), 400
+    
+    # Attempt to borrow the book
+    book.available_copies -= 1
+    current_user.borrowed_books.append(book)
+    
+    try:
+        db.session.commit()
+        return jsonify({"success": "Book borrowed successfully", "book": book.to_dict()}), 200
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": f"Database error occurred: {str(e)}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
+
 
 @app.route('/update_book/<int:id>', methods=['PUT'])
 @jwt_required()
@@ -311,6 +377,9 @@ def borrow_book():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+
+
 
 @app.route('/book/return', methods=['POST'])
 @jwt_required()
